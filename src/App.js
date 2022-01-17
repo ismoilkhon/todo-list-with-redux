@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import { Form } from './components/Form'
+import { Title } from './components/Title'
+import { ListItem } from './components/ListItem'
+import { ChakraProvider, Container, Box } from '@chakra-ui/react'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export function App() {
+	return (
+		<ChakraProvider>
+			<Container centerConten w='60vw'>
+				<Form/>
+				<Title text='Todo' colorScheme='teal'/>
+				<Box>
+					<ListItem/>
+					<ListItem/>
+					<ListItem/>
+				</Box>
+				<Title text='Completed' colorScheme='teal'/>
+				<Box>
+					<ListItem/>
+					<ListItem/>
+					<ListItem/>
+				</Box>
+			</Container>
+		</ChakraProvider>
+	)
 }
-
-export default App;
