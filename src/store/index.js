@@ -19,8 +19,8 @@ function todosReducer(state = [], { type, payload }) {
 }
 
 export const selectors = {
-	getTodos: state => state?.todos?.filter(item => !item.isComplete),
-	getCompletedTodos: state => state?.todos?.filter(item => item.isComplete),
+	getTodos: store => store?.todos?.filter(item => !item.isComplete),
+	getCompletedTodos: store => store?.todos?.filter(item => item.isComplete),
 }
 
 export const actions = {
