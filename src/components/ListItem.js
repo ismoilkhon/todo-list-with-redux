@@ -30,7 +30,7 @@ export function ListItem({ id, text, completed }) {
 
 	return (
 		<Flex justifyContent='space-between' alignItems='center' pb={2} pt={2}>
-			{ completed
+			{completed
 				? <Text isTruncated as='s'>{text}</Text>
 				: (
 					<InputGroup>
