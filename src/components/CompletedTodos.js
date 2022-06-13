@@ -1,11 +1,10 @@
 import { Title } from './Title'
 import { Empty } from './Empty'
-import { selectors } from '../store'
 import { ListItem } from './ListItem'
 import { useSelector } from 'react-redux'
 
 export function CompletedTodos() {
-	const todos = useSelector(selectors.getCompletedTodos)
+	const todos = useSelector(store => store?.todos?.filter(item => item.completed))
 	return (
 		<>
 			<Title text='Completed'/>

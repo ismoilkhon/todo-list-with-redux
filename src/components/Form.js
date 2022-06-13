@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import { v4 as uuid } from 'uuid'
-import { actions } from '../store'
 import { useDispatch } from 'react-redux'
+import { addTodo } from '../store/todosSlice'
 import { Input, Flex, Button } from '@chakra-ui/react'
 
 export function Form() {
@@ -16,7 +15,7 @@ export function Form() {
 
 	function handleAddTodo() {
 		if (value) {
-			dispatch(actions.addTodo({ id: uuid(), text: value, isComplete: false }))
+			dispatch(addTodo(value))
 			setValue('')
 		}
 	}
