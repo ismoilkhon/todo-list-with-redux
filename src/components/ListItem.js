@@ -1,13 +1,12 @@
 import { useState } from 'react'
-import { actions } from '../store'
-import { useDispatch } from 'react-redux'
+import { useStore } from '../store'
 import { EditIcon, DeleteIcon, CheckIcon, MinusIcon, CloseIcon } from '@chakra-ui/icons'
 import { Flex, Input, IconButton, Text, ButtonGroup, InputGroup, InputRightAddon } from '@chakra-ui/react'
 
 export function ListItem({ id, text, isComplete }) {
-	const dispatch = useDispatch()
 	const [value, setValue] = useState(text)
 	const [isEditable, setIsEditable] = useState(false)
+	const { editTodo, deleteTodo, toggleTodo } = useStore()
 
 	function handleEnterPress(e) {
 		if (e.charCode === 13) {
@@ -15,17 +14,9 @@ export function ListItem({ id, text, isComplete }) {
 		}
 	}
 
-	function handleDelete() {
-		dispatch(actions.deleteTodo(id))
-	}
-
-	function handleToggleCompleted() {
-		dispatch(actions.toggleCompleted(id))
-	}
-
 	function handleEdit() {
+		editTodo(id, value)
 		setIsEditable(false)
-		dispatch(actions.editTodo({ id, text: value }))
 	}
 
 	return (
@@ -58,9 +49,9 @@ export function ListItem({ id, text, isComplete }) {
 				{!isComplete && !isEditable
 					&& <IconButton icon={<EditIcon color='teal'/>} onClick={() => setIsEditable(true)}/>
 				}
-				<IconButton icon={<DeleteIcon color='red.300'/>} onClick={handleDelete}/>
+				<IconButton icon={<DeleteIcon color='red.300'/>} onClick={() => deleteTodo(id)}/>
 				<IconButton
-					onClick={handleToggleCompleted}
+					onClick={() => toggleTodo(id)}
 					icon={isComplete ? <MinusIcon/> : <CheckIcon color='green.400'/>}
 				/>
 			</ButtonGroup>

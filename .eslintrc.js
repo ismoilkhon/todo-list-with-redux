@@ -127,7 +127,6 @@ module.exports = {
 	},
 	extends: [
 		'plugin:react/recommended',
-		'xo',
 	],
 	parserOptions: {
 		ecmaFeatures: {
