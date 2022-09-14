@@ -1,16 +1,15 @@
 import { Title } from './Title'
 import { Empty } from './Empty'
-import { selectors } from '../store'
+import { useStore } from '../store'
 import { ListItem } from './ListItem'
-import { useSelector } from 'react-redux'
 
 export function CompletedTodos() {
-	const todos = useSelector(selectors.getCompletedTodos)
+	const { todos } = useStore()
 	return (
 		<>
 			<Title text='Completed'/>
 			{!todos.length && <Empty/>}
-			{todos?.map(todo => <ListItem key={todo.id} {...todo}/>)}
+			{todos?.filter(todo => todo.isComplete)?.map(todo => <ListItem key={todo.id} {...todo}/>)}
 		</>
 	)
 }

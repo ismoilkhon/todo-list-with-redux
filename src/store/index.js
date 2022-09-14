@@ -1,39 +1,52 @@
-import storage from 'redux-persist/lib/storage'
-import { combineReducers, createStore } from 'redux'
-import { persistStore, persistReducer } from 'redux-persist'
+import { v4 as uuid } from 'uuid'
+import { createContext, useContext, useEffect, useState } from 'react'
 
-// eslint-disable-next-line default-param-last
-function todosReducer(state = [], { type, payload }) {
-	switch (type) {
-	case 'ADD_TODO':
-		return [...state, payload]
-	case 'DELETE_TODO':
-		return state?.filter(item => item.id !== payload)
-	case 'EDIT_TODO':
-		return state?.map(item => item.id === payload.id ? { ...item, text: payload.text } : item)
-	case 'TOGGLE_COMPLETED':
-		return state?.map(item => item.id === payload ? { ...item, isComplete: !item.isComplete } : item)
-	default:
-		return state
+const StoreContext = createContext()
+
+export function StoreProvider({ children }) {
+	const [todos, setTodos] = useState([])
+
+	useEffect(() => {
+		localStorage.setItem('todos', JSON.stringify(todos))
+	}, [todos])
+
+	useEffect(() => {
+		const saved = JSON.parse(localStorage.getItem('todos'))
+
+		if (saved?.length > 0) {
+			setTodos(saved)
+		}
+	}, [])
+
+	function deleteTodo(id) {
+		setTodos(prev => prev.filter(todo => todo.id !== id))
 	}
+
+	function addTodo(text) {
+		setTodos(prev => [...prev, { id: uuid(), text, isComplete: false }])
+	}
+
+	function editTodo(id, text) {
+		setTodos(prev => prev.map(todo => todo.id === id ? { ...todo, text } : todo))
+	}
+
+	function toggleTodo(id) {
+		setTodos(prev => prev.map(todo => todo.id === id ? { ...todo, isComplete: !prev.isComplete } : todo))
+	}
+
+	return (
+		<StoreContext.Provider
+			value={{
+				todos,
+				addTodo,
+				editTodo,
+				deleteTodo,
+				toggleTodo,
+			}}
+		>
+			{children}
+		</StoreContext.Provider>
+	)
 }
 
-export const selectors = {
-	getTodos: store => store?.todos?.filter(item => !item.isComplete),
-	getCompletedTodos: store => store?.todos?.filter(item => item.isComplete),
-}
-
-export const actions = {
-	addTodo: payload => ({ type: 'ADD_TODO', payload }),
-	editTodo: payload => ({ type: 'EDIT_TODO', payload }),
-	deleteTodo: payload => ({ type: 'DELETE_TODO', payload }),
-	toggleCompleted: payload => ({ type: 'TOGGLE_COMPLETED', payload }),
-}
-
-export const store = createStore(
-	persistReducer(
-		{ storage, key: 'root' },
-		combineReducers({ todos: todosReducer }),
-	),
-)
-export const persistor = persistStore(store)
+export const useStore = () => useContext(StoreContext)
